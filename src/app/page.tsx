@@ -75,7 +75,7 @@ export default function Home() {
           rel="noopener noreferrer"
         >
           <Image aria-hidden src="/globe.svg" alt="Globe icon" width={16} height={16} />
-          Go to nextjs.org → Test husky
+          Go to nextjs.org → Test husky 123
         </a>
       </footer>
     </div>
