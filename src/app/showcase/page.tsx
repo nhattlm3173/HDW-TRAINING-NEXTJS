@@ -1,5 +1,40 @@
+"use client";
+import { useToast } from "@/component/toast/toast-context";
+import { ToastType } from "@/type/toast/IToast";
 import React from "react";
 
 export default function ShowCase() {
-  return <div>showcase</div>;
+  const { showToast } = useToast();
+  // const toasts = useContext(ToastContext);
+  // console.log(toasts);
+
+  return (
+    <div>
+      showcase
+      <button
+        onClick={() => showToast("Test hiển thị toast success!", ToastType.SUCCESS)}
+        className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+      >
+        Show Toast Success
+      </button>
+      <button
+        onClick={() => showToast("Test hiển thị toast error!", ToastType.ERROR)}
+        className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+      >
+        Show Toast Error
+      </button>
+      <button
+        onClick={() => showToast("Test hiển thị toast info!", ToastType.INFO)}
+        className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+      >
+        Show Toast Info
+      </button>
+      <button
+        onClick={() => showToast("Test hiển thị toast warning!", ToastType.WARNING)}
+        className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+      >
+        Show Toast Warning
+      </button>
+    </div>
+  );
 }
