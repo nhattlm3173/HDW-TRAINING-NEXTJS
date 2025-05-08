@@ -17,4 +17,5 @@ export interface TodoItemProps {
   todoItem: TodoValue;
   handleDeleteTodoItem: (id: string, message: string) => void;
   handleChangeStatusTodoItem: (id: string) => void;
+  askUpdate: (todo: TodoValue) => void;
 }

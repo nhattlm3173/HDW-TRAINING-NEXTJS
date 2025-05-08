@@ -7,7 +7,7 @@ import {
   TodoItemProps,
 } from '@/type/todoList/ITodoList';
 import { memo, useState } from 'react';
-import { CloseOutlined, ContainerOutlined } from '@ant-design/icons';
+import { CloseOutlined, ContainerOutlined, EditOutlined } from '@ant-design/icons';
 import { useToast } from '../Toast';
 import { ToastType } from '@/type/toast/IToast';
 import { ConfirmModal } from '../ConfirmModal';
@@ -21,9 +21,12 @@ export const TodoListContainer = memo(function TodoListContainer({
     formState: { errors },
     handleSubmit,
     reset,
+    setValue,
   } = useForm<TodoFormValues>();
 
   const { showToast } = useToast();
+
+  const [todoToUpdate, setTodoToUpdate] = useState<TodoValue | null>(null);
 
   const onSubmit = (data: TodoFormValues) => {
     const todoData: TodoValue = {
@@ -32,14 +35,23 @@ export const TodoListContainer = memo(function TodoListContainer({
       isFinish: false,
     };
 
-    handleAddTodoItem(todoData);
+    if (todoToUpdate) {
+      handleUpdateTodoItem(data.message);
+    } else {
+      handleAddTodoItem(todoData);
+    }
 
     reset();
 
-    showToast(`Task ${todoData.message} added successfully!`, ToastType.SUCCESS);
+    setTodoToUpdate(null);
+
+    showToast(
+      `Task ${todoData.message} ${todoToUpdate ? 'updated' : 'added'} successfully!`,
+      ToastType.SUCCESS
+    );
   };
 
-  //   console.log(todoList);
+  // console.log(todoList);
 
   const handleAddTodoItem = (todoItem: TodoValue) => {
     setTodoList((pre: TodoValue[]) => [...pre, todoItem]);
@@ -63,10 +75,30 @@ export const TodoListContainer = memo(function TodoListContainer({
     );
   };
 
+  const handleUpdateTodoItem = (message: string) => {
+    setTodoList((pre: TodoValue[]) =>
+      pre.map((item: TodoValue) => {
+        if (item.id === todoToUpdate?.id) {
+          // console.log(item, todoToUpdate);
+
+          return { ...item, message };
+        }
+
+        return item;
+      })
+    );
+  };
+
+  const askUpdate = (todo: TodoValue) => {
+    setTodoToUpdate(todo);
+
+    setValue('message', todo.message);
+  };
+
   return (
     <div className="overflow-hidden rounded-xl bg-white shadow-xl">
-      <div className="border-b border-gray-200 bg-white p-6">
-        <form onSubmit={handleSubmit(onSubmit)} className="flex items-center">
+      <div className="flex items-center border-b border-gray-200 bg-white p-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex grow items-center">
           <div className="relative flex-1">
             <input
               {...register('message', { required: true })}
@@ -84,9 +116,20 @@ export const TodoListContainer = memo(function TodoListContainer({
             type="submit"
             className="ml-3 rounded-lg bg-indigo-600 px-6 py-3 font-medium text-white transition-all duration-200 hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
           >
-            Add
+            {todoToUpdate ? 'Update' : 'Add'}
           </button>
         </form>
+        {todoToUpdate && (
+          <button
+            onClick={() => {
+              setTodoToUpdate(null);
+              reset();
+            }}
+            className="ml-3 rounded-lg bg-indigo-600 px-6 py-3 font-medium text-white transition-all duration-200 hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
+          >
+            {'Cancel'}
+          </button>
+        )}
       </div>
 
       <div className="divide-y divide-gray-100">
@@ -102,6 +145,7 @@ export const TodoListContainer = memo(function TodoListContainer({
               todoItem={item}
               handleDeleteTodoItem={handleDeleteTodoItem}
               handleChangeStatusTodoItem={handleChangeStatusTodoItem}
+              askUpdate={askUpdate}
             />
           ))
         )}
@@ -121,6 +165,7 @@ const TodoItem = memo(function TodoListContainer({
   todoItem,
   handleDeleteTodoItem,
   handleChangeStatusTodoItem,
+  askUpdate,
 }: TodoItemProps) {
   //   console.log(todoItem.message);
 
@@ -161,6 +206,13 @@ const TodoItem = memo(function TodoListContainer({
           {todoItem.message}
         </h2>
       </div>
+
+      <button
+        onClick={() => askUpdate(todoItem)}
+        className="ml-2 rounded-full p-1 text-gray-400 opacity-0 transition-colors duration-200 group-hover:opacity-100 hover:bg-red-100 hover:text-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
+      >
+        <EditOutlined className="flex h-5 w-5 justify-center rounded-b-full text-xs" />
+      </button>
 
       <button
         onClick={() => askDelete(todoItem)}
