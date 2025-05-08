@@ -1,3 +1,4 @@
+'use client';
 import { ConfirmModalProps } from '../../type/confirm/IConfirm';
 import { useEffect, useState } from 'react';
 
