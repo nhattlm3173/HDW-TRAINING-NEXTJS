@@ -6,8 +6,11 @@ import {
   TodoFormValues,
   TodoItemProps,
 } from '@/type/todoList/ITodoList';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { CloseOutlined, ContainerOutlined } from '@ant-design/icons';
+import { useToast } from '../Toast';
+import { ToastType } from '@/type/toast/IToast';
+import { ConfirmModal } from '../ConfirmModal';
 
 export const TodoListContainer = memo(function TodoListContainer({
   todoList,
@@ -20,6 +23,8 @@ export const TodoListContainer = memo(function TodoListContainer({
     reset,
   } = useForm<TodoFormValues>();
 
+  const { showToast } = useToast();
+
   const onSubmit = (data: TodoFormValues) => {
     const todoData: TodoValue = {
       id: Date.now().toString(),
@@ -30,6 +35,8 @@ export const TodoListContainer = memo(function TodoListContainer({
     handleAddTodoItem(todoData);
 
     reset();
+
+    showToast(`Task ${todoData.message} added successfully!`, ToastType.SUCCESS);
   };
 
   //   console.log(todoList);
@@ -38,8 +45,10 @@ export const TodoListContainer = memo(function TodoListContainer({
     setTodoList((pre: TodoValue[]) => [...pre, todoItem]);
   };
 
-  const handleDeleteTodoItem = (id: string) => {
+  const handleDeleteTodoItem = (id: string, message: string) => {
     setTodoList((pre: TodoValue[]) => pre.filter((item: TodoValue) => item.id !== id));
+
+    showToast(`Task ${message} deleted  successfully!`, ToastType.SUCCESS);
   };
 
   const handleChangeStatusTodoItem = (id: string) => {
@@ -115,6 +124,26 @@ const TodoItem = memo(function TodoListContainer({
 }: TodoItemProps) {
   //   console.log(todoItem.message);
 
+  const [confirmVisible, setConfirmVisible] = useState(false);
+
+  const [todoToDelete, setTodoToDelete] = useState<TodoValue | null>(null);
+
+  const askDelete = (todo: TodoValue) => {
+    setTodoToDelete(todo);
+
+    setConfirmVisible(true);
+  };
+
+  const confirmDelete = () => {
+    if (todoToDelete) {
+      handleDeleteTodoItem(todoToDelete.id, todoToDelete.message);
+    }
+
+    setConfirmVisible(false);
+
+    setTodoToDelete(null);
+  };
+
   return (
     <div className="group flex items-center justify-between p-4 transition-all duration-200 hover:bg-gray-50">
       <div className="flex flex-1 items-center">
@@ -134,11 +163,19 @@ const TodoItem = memo(function TodoListContainer({
       </div>
 
       <button
-        onClick={() => handleDeleteTodoItem(todoItem.id)}
+        onClick={() => askDelete(todoItem)}
         className="ml-2 rounded-full p-1 text-gray-400 opacity-0 transition-colors duration-200 group-hover:opacity-100 hover:bg-red-100 hover:text-red-500 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:outline-none"
       >
         <CloseOutlined className="flex h-5 w-5 justify-center rounded-b-full text-xs" />
       </button>
+
+      <ConfirmModal
+        visible={confirmVisible}
+        title={`Delete "${todoToDelete?.message}"?`}
+        onConfirm={confirmDelete}
+        onCancel={() => setConfirmVisible(false)}
+        message="Are you sure you want to delete this task?"
+      />
     </div>
   );
 });
