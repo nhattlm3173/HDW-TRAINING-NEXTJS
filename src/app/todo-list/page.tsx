@@ -1,7 +1,8 @@
 'use client';
+
+import React, { useState } from 'react';
 import { TodoListContainer } from '@/component/TodoList';
 import { TodoValue } from '@/type/todoList/ITodoList';
-import React, { useState } from 'react';
 
 export default function TodoList() {
   const [todoList, setTodoList] = useState<TodoValue[]>([]);
