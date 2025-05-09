@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTodoOperations } from '../../hooks/useTodoOperations';
 import { TodoValue } from '@/section/Todo/types/ITodoList';
 import { ContainerOutlined } from '@ant-design/icons';
@@ -10,6 +10,32 @@ import { ToDoForm } from '../TodoForm';
 interface Props {
   todoList: TodoValue[];
 }
+
+const EmptyState = ({ todos }: { todos: TodoValue[] }) => {
+  if (todos.length) {
+    return null;
+  }
+
+  return (
+    <div className="flex flex-col items-center justify-center py-12 text-gray-500">
+      <ContainerOutlined className="mb-4 text-7xl text-gray-300" />
+      <p>No tasks yet. Add one above!</p>
+    </div>
+  );
+};
+
+const Summary = ({ todos }: { todos: TodoValue[] }) => {
+  const todoCompleted = useMemo(() => {
+    return todos.filter(item => item.isFinish);
+  }, [todos]);
+
+  return (
+    <div className="flex justify-between bg-gray-50 p-4 text-sm text-gray-600">
+      <span>Total: {todos.length} tasks</span>
+      <span>Completed: {todoCompleted.length}</span>
+    </div>
+  );
+};
 
 export const TodoList = ({ todoList }: Props) => {
   const {
@@ -32,11 +58,12 @@ export const TodoList = ({ todoList }: Props) => {
     }
   };
 
-  // console.log(todoList);
+  useEffect(() => {
+    console.log('PDebug TodoList render');
+  });
 
   const askUpdate = (todo: TodoValue) => {
     setTodoToUpdate(todo);
-
     setTodoSelectedValue(todo.message);
   };
 
@@ -50,12 +77,9 @@ export const TodoList = ({ todoList }: Props) => {
       />
 
       <div className="divide-y divide-gray-100">
-        {todoListData.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-gray-500">
-            <ContainerOutlined className="mb-4 text-7xl text-gray-300" />
-            <p>No tasks yet. Add one above!</p>
-          </div>
-        ) : (
+        <EmptyState todos={todoListData} />
+
+        {todoListData.length > 0 &&
           todoListData.map((item: TodoValue) => (
             <TodoItem
               key={item.id}
@@ -64,16 +88,10 @@ export const TodoList = ({ todoList }: Props) => {
               handleChangeStatusTodoItem={handleChangeStatusTodoItem}
               askUpdate={askUpdate}
             />
-          ))
-        )}
+          ))}
       </div>
 
-      {todoListData.length > 0 && (
-        <div className="flex justify-between bg-gray-50 p-4 text-sm text-gray-600">
-          <span>Total: {todoListData.length} tasks</span>
-          <span>Completed: {todoListData.filter(item => item.isFinish).length}</span>
-        </div>
-      )}
+      <Summary todos={todoListData} />
     </div>
   );
 };
