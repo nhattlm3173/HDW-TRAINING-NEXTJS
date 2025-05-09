@@ -5,132 +5,54 @@ import {
   TodoListContainerProps,
   TodoFormValues,
   TodoItemProps,
+  TodoFormProps,
 } from '@/type/todoList/ITodoList';
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { CloseOutlined, ContainerOutlined, EditOutlined } from '@ant-design/icons';
 import { useToast } from '../Toast';
 import { ToastType } from '@/type/toast/IToast';
 import { ConfirmModal } from '../ConfirmModal';
+import { cn } from '@/utils/cn';
 
 export const TodoListContainer = memo(function TodoListContainer({
-  todoList,
-  setTodoList,
+  externalTodoList,
 }: TodoListContainerProps) {
   const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    reset,
-    setValue,
-  } = useForm<TodoFormValues>();
+    todoList,
+    todoToUpdate,
+    setTodoToUpdate,
+    handleAddTodoItem,
+    handleDeleteTodoItem,
+    handleChangeStatusTodoItem,
+    handleUpdateTodoItem,
+  } = useTodoOperations(externalTodoList);
 
-  const { showToast } = useToast();
+  const [todoSelectedValue, setTodoSelectedValue] = useState<string>('');
 
-  const [todoToUpdate, setTodoToUpdate] = useState<TodoValue | null>(null);
-
-  const onSubmit = (data: TodoFormValues) => {
-    const todoData: TodoValue = {
-      id: Date.now().toString(),
-      message: data.message,
-      isFinish: false,
-    };
-
+  const onSubmit = (data: TodoValue) => {
     if (todoToUpdate) {
       handleUpdateTodoItem(data.message);
     } else {
-      handleAddTodoItem(todoData);
+      handleAddTodoItem(data);
     }
-
-    reset();
-
-    setTodoToUpdate(null);
-
-    showToast(
-      `Task ${todoData.message} ${todoToUpdate ? 'updated' : 'added'} successfully!`,
-      ToastType.SUCCESS
-    );
   };
 
   // console.log(todoList);
 
-  const handleAddTodoItem = (todoItem: TodoValue) => {
-    setTodoList((pre: TodoValue[]) => [...pre, todoItem]);
-  };
-
-  const handleDeleteTodoItem = (id: string, message: string) => {
-    setTodoList((pre: TodoValue[]) => pre.filter((item: TodoValue) => item.id !== id));
-
-    showToast(`Task ${message} deleted  successfully!`, ToastType.SUCCESS);
-  };
-
-  const handleChangeStatusTodoItem = (id: string) => {
-    setTodoList((pre: TodoValue[]) =>
-      pre.map((item: TodoValue) => {
-        if (item.id === id) {
-          return { ...item, isFinish: !item.isFinish };
-        }
-
-        return item;
-      })
-    );
-  };
-
-  const handleUpdateTodoItem = (message: string) => {
-    setTodoList((pre: TodoValue[]) =>
-      pre.map((item: TodoValue) => {
-        if (item.id === todoToUpdate?.id) {
-          // console.log(item, todoToUpdate);
-
-          return { ...item, message };
-        }
-
-        return item;
-      })
-    );
-  };
-
   const askUpdate = (todo: TodoValue) => {
     setTodoToUpdate(todo);
 
-    setValue('message', todo.message);
+    setTodoSelectedValue(todo.message);
   };
 
   return (
     <div className="overflow-hidden rounded-xl bg-white shadow-xl">
-      <div className="flex items-center border-b border-gray-200 bg-white p-6">
-        <form onSubmit={handleSubmit(onSubmit)} className="flex grow items-center">
-          <div className="relative flex-1">
-            <input
-              {...register('message', { required: true })}
-              aria-invalid={errors.message ? 'true' : 'false'}
-              placeholder="Add a new task..."
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-            />
-            {errors.message?.type === 'required' && (
-              <p role="alert" className="absolute mt-1 text-sm text-red-500">
-                Task description is required
-              </p>
-            )}
-          </div>
-          <button
-            type="submit"
-            className="ml-3 rounded-lg bg-indigo-600 px-6 py-3 font-medium text-white transition-all duration-200 hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
-          >
-            {todoToUpdate ? 'Update' : 'Add'}
-          </button>
-        </form>
-        {todoToUpdate && (
-          <button
-            onClick={() => {
-              setTodoToUpdate(null);
-              reset();
-            }}
-            className="ml-3 rounded-lg bg-indigo-600 px-6 py-3 font-medium text-white transition-all duration-200 hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
-          >
-            {'Cancel'}
-          </button>
-        )}
-      </div>
+      <ToDoForm
+        onSubmit={onSubmit}
+        todoSelectedValue={todoSelectedValue}
+        todoToUpdate={todoToUpdate}
+        setTodoToUpdate={setTodoToUpdate}
+      />
 
       <div className="divide-y divide-gray-100">
         {todoList.length === 0 ? (
@@ -156,6 +78,86 @@ export const TodoListContainer = memo(function TodoListContainer({
           <span>Total: {todoList.length} tasks</span>
           <span>Completed: {todoList.filter(item => item.isFinish).length}</span>
         </div>
+      )}
+    </div>
+  );
+});
+
+const ToDoForm = memo(function TodoForm({
+  todoSelectedValue,
+  onSubmit,
+  todoToUpdate,
+  setTodoToUpdate,
+}: TodoFormProps) {
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    reset,
+    setValue,
+  } = useForm<TodoFormValues>();
+
+  useEffect(() => {
+    setValue('message', todoSelectedValue);
+  }, [todoSelectedValue, setValue]);
+
+  const submitHandler = (data: TodoFormValues) => {
+    if (todoToUpdate) {
+      onSubmit({
+        ...todoToUpdate,
+        message: data.message,
+      });
+    } else {
+      const todoData: TodoValue = {
+        id: Date.now().toString(),
+        message: data.message,
+        isFinish: false,
+      };
+
+      onSubmit(todoData);
+    }
+
+    reset();
+
+    setTodoToUpdate(null);
+  };
+
+  return (
+    <div className="flex items-center border-b border-gray-200 bg-white p-6">
+      <form onSubmit={handleSubmit(submitHandler)} className="flex grow items-center">
+        <div className="relative flex-1">
+          <input
+            {...register('message', { required: true })}
+            aria-invalid={errors.message ? 'true' : 'false'}
+            placeholder="Add a new task..."
+            className="w-full rounded-lg border border-gray-300 px-4 py-3 transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+          />
+
+          {errors.message?.type === 'required' && (
+            <p role="alert" className="absolute mt-1 text-sm text-red-500">
+              Task description is required
+            </p>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          className="ml-3 rounded-lg bg-indigo-600 px-6 py-3 font-medium text-white transition-all duration-200 hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
+        >
+          {todoToUpdate ? 'Update' : 'Add'}
+        </button>
+      </form>
+
+      {todoToUpdate && (
+        <button
+          onClick={() => {
+            setTodoToUpdate(null);
+            reset();
+          }}
+          className="ml-3 rounded-lg bg-indigo-600 px-6 py-3 font-medium text-white transition-all duration-200 hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
+        >
+          {'Cancel'}
+        </button>
       )}
     </div>
   );
@@ -200,9 +202,7 @@ const TodoItem = memo(function TodoListContainer({
             className="h-5 w-5 cursor-pointer rounded-md border-gray-300 text-indigo-600 focus:ring-indigo-500"
           />
         </div>
-        <h2
-          className={`ml-3 text-gray-800 ${todoItem.isFinish ? 'text-gray-400 line-through' : ''}`}
-        >
+        <h2 className={cn('ml-3 text-gray-800', todoItem.isFinish && 'text-gray-400 line-through')}>
           {todoItem.message}
         </h2>
       </div>
@@ -231,3 +231,64 @@ const TodoItem = memo(function TodoListContainer({
     </div>
   );
 });
+
+function useTodoOperations(initialTodos: TodoValue[] = []) {
+  const [todoList, setTodoList] = useState<TodoValue[]>(initialTodos);
+  const [todoToUpdate, setTodoToUpdate] = useState<TodoValue | null>(null);
+
+  const { showToast } = useToast();
+
+  const handleAddTodoItem = (todoItem: TodoValue) => {
+    setTodoList((pre: TodoValue[]) => [...pre, todoItem]);
+
+    showToast(`Task ${todoItem.message} added successfully!`, ToastType.SUCCESS);
+  };
+
+  const handleDeleteTodoItem = (id: string, message: string) => {
+    setTodoList((pre: TodoValue[]) => pre.filter((item: TodoValue) => item.id !== id));
+
+    showToast(`Task ${message} deleted successfully!`, ToastType.SUCCESS);
+  };
+
+  const handleChangeStatusTodoItem = (id: string) => {
+    let message = '';
+
+    setTodoList((pre: TodoValue[]) =>
+      pre.map((item: TodoValue) => {
+        if (item.id === id) {
+          message = item.message;
+
+          return { ...item, isFinish: !item.isFinish };
+        }
+
+        return item;
+      })
+    );
+
+    showToast(`Task ${message} updated status successfully!`, ToastType.SUCCESS);
+  };
+
+  const handleUpdateTodoItem = (message: string) => {
+    setTodoList((pre: TodoValue[]) =>
+      pre.map((item: TodoValue) => {
+        if (item.id === todoToUpdate?.id) {
+          return { ...item, message };
+        }
+
+        return item;
+      })
+    );
+
+    showToast(`Task ${message} updated successfully!`, ToastType.SUCCESS);
+  };
+
+  return {
+    todoList,
+    todoToUpdate,
+    setTodoToUpdate,
+    handleAddTodoItem,
+    handleDeleteTodoItem,
+    handleChangeStatusTodoItem,
+    handleUpdateTodoItem,
+  };
+}
