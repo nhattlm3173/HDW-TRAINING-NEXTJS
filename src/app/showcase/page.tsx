@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import { useToast } from '@/component/Toast/hooks/useToast';
 import { ToastType } from '@/component/Toast/types/IToast';

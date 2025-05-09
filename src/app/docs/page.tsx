@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import { decrement, increment } from '@/redux/counterSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/store';
