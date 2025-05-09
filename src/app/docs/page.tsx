@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { decrement, increment } from '@/redux/counterSlice';
-import { useAppDispatch, useAppSelector } from '@/redux/hook';
+import { useAppDispatch, useAppSelector } from '@/redux/store';
 
 export default function Docs() {
   const count = useAppSelector(state => state.counter.value);
