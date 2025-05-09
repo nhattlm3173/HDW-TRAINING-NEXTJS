@@ -1,6 +1,6 @@
 'use client';
-import { ConfirmModalProps } from '../../type/confirm/IConfirm';
-import { useEffect, useState } from 'react';
+
+import { ConfirmModalProps } from './types/IConfirm';
 
 export const ConfirmModal = ({
   visible,
@@ -9,36 +9,28 @@ export const ConfirmModal = ({
   onCancel,
   message = '',
 }: ConfirmModalProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    if (visible) {
-      setTimeout(() => setIsOpen(true), 10);
-    } else {
-      setIsOpen(false);
-    }
-  }, [visible]);
-
-  if (!visible && !isOpen) return null;
+  // if (!visible) return null;
 
   return (
     <div
       className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300 ease-in-out ${
-        isOpen ? 'opacity-100' : 'opacity-0'
+        visible
+          ? 'pointer-events-auto visible opacity-100'
+          : 'pointer-events-none invisible opacity-0'
       }`}
       aria-modal="true"
       role="dialog"
     >
       <div
         className={`fixed inset-0 bg-black transition-opacity duration-300 ease-in-out ${
-          isOpen ? 'bg-opacity-50' : 'bg-opacity-0'
+          visible ? 'opacity-50' : 'opacity-0'
         }`}
         onClick={onCancel}
       />
 
       <div
         className={`mx-4 w-full max-w-md transform rounded-lg bg-white shadow-xl transition-all duration-300 ease-in-out ${
-          isOpen ? 'translate-y-0 scale-100' : 'translate-y-4 scale-95'
+          visible ? 'translate-y-0 scale-100' : 'translate-y-4 scale-95'
         } relative`}
       >
         <div className="border-b border-gray-200 px-6 py-4">
