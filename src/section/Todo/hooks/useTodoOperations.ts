@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { TodoValue } from '@/section/Todo/types/ITodoList';
-import { useToast } from '@/component/Toast';
+import { useToast } from '@/component/Toast/hooks/useToast';
 import { ToastType } from '@/component/Toast/types/IToast';
 
 export function useTodoOperations(initialTodos: TodoValue[] = []) {
