@@ -1,15 +1,22 @@
 'use client';
 
-import { memo, useEffect } from 'react';
-import { TodoFormProps, TodoFormValues, TodoValue } from '@/section/Todo/types/ITodoList';
+import { Dispatch, SetStateAction, useEffect } from 'react';
+import { TodoFormValues, TodoValue } from '@/section/Todo/types/ITodoList';
 import { useForm } from 'react-hook-form';
 
-export const ToDoForm = memo(function TodoForm({
+export interface Props {
+  onSubmitAction: (data: TodoValue) => void;
+  todoSelectedValue: string;
+  todoToUpdate: TodoValue | null;
+  setTodoToUpdateAction: Dispatch<SetStateAction<TodoValue | null>>;
+}
+
+export const ToDoForm = ({
   todoSelectedValue,
-  onSubmit,
+  onSubmitAction,
   todoToUpdate,
-  setTodoToUpdate,
-}: TodoFormProps) {
+  setTodoToUpdateAction,
+}: Props) => {
   const {
     register,
     formState: { errors },
@@ -24,7 +31,7 @@ export const ToDoForm = memo(function TodoForm({
 
   const submitHandler = (data: TodoFormValues) => {
     if (todoToUpdate) {
-      onSubmit({
+      onSubmitAction({
         ...todoToUpdate,
         message: data.message,
       });
@@ -35,12 +42,12 @@ export const ToDoForm = memo(function TodoForm({
         isFinish: false,
       };
 
-      onSubmit(todoData);
+      onSubmitAction(todoData);
     }
 
     reset();
 
-    setTodoToUpdate(null);
+    setTodoToUpdateAction(null);
   };
 
   return (
@@ -72,7 +79,7 @@ export const ToDoForm = memo(function TodoForm({
       {todoToUpdate && (
         <button
           onClick={() => {
-            setTodoToUpdate(null);
+            setTodoToUpdateAction(null);
             reset();
           }}
           className="ml-3 rounded-lg bg-indigo-600 px-6 py-3 font-medium text-white transition-all duration-200 hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
@@ -82,4 +89,4 @@ export const ToDoForm = memo(function TodoForm({
       )}
     </div>
   );
-});
+};

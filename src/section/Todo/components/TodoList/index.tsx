@@ -84,9 +84,9 @@ export const TodoList = ({ todoList }: Props) => {
             <TodoItem
               key={item.id}
               todoItem={item}
-              handleDeleteTodoItem={handleDeleteTodoItem}
-              handleChangeStatusTodoItem={handleChangeStatusTodoItem}
-              askUpdate={askUpdate}
+              handleDeleteTodoItemAction={handleDeleteTodoItem}
+              handleChangeStatusTodoItemAction={handleChangeStatusTodoItem}
+              askUpdateAction={askUpdate}
             />
           ))}
       </div>

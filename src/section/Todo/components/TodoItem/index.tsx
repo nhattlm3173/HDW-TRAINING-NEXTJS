@@ -1,21 +1,25 @@
 'use client';
 
-import { memo, useState } from 'react';
-import { TodoItemProps, TodoValue } from '@/section/Todo/types/ITodoList';
+import { useState } from 'react';
+import { TodoValue } from '@/section/Todo/types/ITodoList';
 import { CloseOutlined, EditOutlined } from '@ant-design/icons';
 import { ConfirmModal } from '@/component/ConfirmModal';
 import { cn } from '@/utils/cn';
 
-export const TodoItem = memo(function TodoListContainer({
+export interface Props {
+  todoItem: TodoValue;
+  handleDeleteTodoItemAction: (id: string, message: string) => void;
+  handleChangeStatusTodoItemAction: (id: string) => void;
+  askUpdateAction: (todo: TodoValue) => void;
+}
+
+export const TodoItem = ({
   todoItem,
-  handleDeleteTodoItem,
-  handleChangeStatusTodoItem,
-  askUpdate,
-}: TodoItemProps) {
-  //   console.log(todoItem.message);
-
+  handleDeleteTodoItemAction,
+  handleChangeStatusTodoItemAction,
+  askUpdateAction,
+}: Props) => {
   const [confirmVisible, setConfirmVisible] = useState(false);
-
   const [todoToDelete, setTodoToDelete] = useState<TodoValue | null>(null);
 
   const askDelete = (todo: TodoValue) => {
@@ -26,7 +30,7 @@ export const TodoItem = memo(function TodoListContainer({
 
   const confirmDelete = () => {
     if (todoToDelete) {
-      handleDeleteTodoItem(todoToDelete.id, todoToDelete.message);
+      handleDeleteTodoItemAction(todoToDelete.id, todoToDelete.message);
     }
 
     setConfirmVisible(false);
@@ -41,7 +45,7 @@ export const TodoItem = memo(function TodoListContainer({
           <input
             type="checkbox"
             checked={todoItem.isFinish}
-            onChange={() => handleChangeStatusTodoItem(todoItem.id)}
+            onChange={() => handleChangeStatusTodoItemAction(todoItem.id)}
             className="h-5 w-5 cursor-pointer rounded-md border-gray-300 text-indigo-600 focus:ring-indigo-500"
           />
         </div>
@@ -51,7 +55,7 @@ export const TodoItem = memo(function TodoListContainer({
       </div>
 
       <button
-        onClick={() => askUpdate(todoItem)}
+        onClick={() => askUpdateAction(todoItem)}
         className="ml-2 rounded-full p-1 text-gray-400 opacity-0 transition-colors duration-200 group-hover:opacity-100 hover:bg-red-100 hover:text-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
       >
         <EditOutlined className="flex h-5 w-5 justify-center rounded-b-full text-xs" />
@@ -73,4 +77,4 @@ export const TodoItem = memo(function TodoListContainer({
       />
     </div>
   );
-});
+};
