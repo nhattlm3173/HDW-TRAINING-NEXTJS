@@ -1,14 +1,14 @@
-import { Layout } from '@/component/Layout';
+'use client';
+
 import { ToastProvider } from '@/component/Toast';
-import { ReduxProvider } from '@/redux/provider';
 import React from 'react';
+import { Provider } from 'react-redux';
+import { store } from '@/redux/store';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ReduxProvider>
-      <Layout>
-        <ToastProvider>{children}</ToastProvider>
-      </Layout>
-    </ReduxProvider>
+    <Provider store={store}>
+      <ToastProvider>{children}</ToastProvider>
+    </Provider>
   );
 }
