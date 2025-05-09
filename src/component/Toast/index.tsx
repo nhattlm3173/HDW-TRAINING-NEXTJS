@@ -7,7 +7,7 @@ import {
   ToastContextType,
   ToastItemProps,
   ToastType,
-} from '@/type/toast/IToast';
+} from '@/component/Toast/types/IToast';
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,

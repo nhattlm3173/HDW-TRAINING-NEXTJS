@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useToast } from '@/component/Toast';
-import { ToastType } from '@/type/toast/IToast';
+import { ToastType } from '@/component/Toast/types/IToast';
 
 export default function ShowCase() {
   const { showToast } = useToast();
