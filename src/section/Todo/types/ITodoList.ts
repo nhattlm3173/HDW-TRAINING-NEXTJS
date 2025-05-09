@@ -6,10 +6,6 @@ export interface TodoValue {
   isFinish: boolean;
 }
 
-export interface TodoListContainerProps {
-  externalTodoList: TodoValue[];
-}
-
 export interface TodoFormValues {
   message: string;
 }

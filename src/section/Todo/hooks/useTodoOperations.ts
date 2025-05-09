@@ -6,19 +6,19 @@ import { useToast } from '@/component/Toast/hooks/useToast';
 import { ToastType } from '@/component/Toast/types/IToast';
 
 export function useTodoOperations(initialTodos: TodoValue[] = []) {
-  const [todoList, setTodoList] = useState<TodoValue[]>(initialTodos);
+  const [todoListData, setTodoListData] = useState<TodoValue[]>(initialTodos);
   const [todoToUpdate, setTodoToUpdate] = useState<TodoValue | null>(null);
 
   const { showToast } = useToast();
 
   const handleAddTodoItem = (todoItem: TodoValue) => {
-    setTodoList((pre: TodoValue[]) => [...pre, todoItem]);
+    setTodoListData((pre: TodoValue[]) => [...pre, todoItem]);
 
     showToast(`Task ${todoItem.message} added successfully!`, ToastType.SUCCESS);
   };
 
   const handleDeleteTodoItem = (id: string, message: string) => {
-    setTodoList((pre: TodoValue[]) => pre.filter((item: TodoValue) => item.id !== id));
+    setTodoListData((pre: TodoValue[]) => pre.filter((item: TodoValue) => item.id !== id));
 
     showToast(`Task ${message} deleted successfully!`, ToastType.SUCCESS);
   };
@@ -26,7 +26,7 @@ export function useTodoOperations(initialTodos: TodoValue[] = []) {
   const handleChangeStatusTodoItem = (id: string) => {
     let message = '';
 
-    setTodoList((pre: TodoValue[]) =>
+    setTodoListData((pre: TodoValue[]) =>
       pre.map((item: TodoValue) => {
         if (item.id === id) {
           message = item.message;
@@ -42,7 +42,7 @@ export function useTodoOperations(initialTodos: TodoValue[] = []) {
   };
 
   const handleUpdateTodoItem = (message: string) => {
-    setTodoList((pre: TodoValue[]) =>
+    setTodoListData((pre: TodoValue[]) =>
       pre.map((item: TodoValue) => {
         if (item.id === todoToUpdate?.id) {
           return { ...item, message };
@@ -56,7 +56,7 @@ export function useTodoOperations(initialTodos: TodoValue[] = []) {
   };
 
   return {
-    todoList,
+    todoListData,
     todoToUpdate,
     setTodoToUpdate,
     handleAddTodoItem,
