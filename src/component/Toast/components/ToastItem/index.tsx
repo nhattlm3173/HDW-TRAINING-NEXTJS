@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { ToastItemProps } from '../../types/IToast';
-import { getToastStyles, ToastIcon } from '../..';
 import { CloseCircleOutlined } from '@ant-design/icons';
 import { cn } from '@/utils/cn';
+import { ToastIcon } from '../../utils/getToastIcon';
+import { getToastStyles } from '../../utils/getToastStyles';
 
 export const ToastItem = ({ toast, removeToast }: ToastItemProps) => {
   const [progress, setProgress] = useState(100);
