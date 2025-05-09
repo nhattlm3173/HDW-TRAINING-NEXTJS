@@ -1,6 +1,6 @@
 'use client';
 
-import { ConfirmModalProps } from '../../type/confirm/IConfirm';
+import { ConfirmModalProps } from './types/IConfirm';
 
 export const ConfirmModal = ({
   visible,
@@ -9,12 +9,14 @@ export const ConfirmModal = ({
   onCancel,
   message = '',
 }: ConfirmModalProps) => {
-  if (!visible) return null;
+  // if (!visible) return null;
 
   return (
     <div
       className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300 ease-in-out ${
-        visible ? 'opacity-100' : 'opacity-0'
+        visible
+          ? 'pointer-events-auto visible opacity-100'
+          : 'pointer-events-none invisible opacity-0'
       }`}
       aria-modal="true"
       role="dialog"
