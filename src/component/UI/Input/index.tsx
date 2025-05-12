@@ -6,7 +6,7 @@ import { WarningOutlined } from '@ant-design/icons';
 
 export default function Input({ label, error, className = '', ...props }: InputProps) {
   return (
-    <div className="flex w-full flex-col space-y-2">
+    <div className="mx-1 my-3 flex w-full flex-col space-y-2">
       {label && (
         <label className="text-sm font-medium text-gray-700 transition-colors">{label}</label>
       )}
