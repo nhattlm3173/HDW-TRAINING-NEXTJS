@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from "react";
 import { useToast } from '@/component/Toast/hooks/useToast';
 import { ToastType } from '@/component/Toast/types/IToast';
 
@@ -8,6 +8,10 @@ export default function ShowCase() {
   const { showToast } = useToast();
   // const toasts = useContext(ToastContext);
   // console.log(toasts);
+
+  useEffect(() => {
+    console.log('PDebug showcase re-render');
+  });
 
   return (
     <div className="space-y-3 space-x-3">

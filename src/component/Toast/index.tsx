@@ -23,6 +23,8 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
       duration,
     };
 
+    console.log('PDebug add toast: ', newToast);
+
     // Add the new toast to the state
     setToasts(prevState => [...prevState, newToast]);
   }, []);
@@ -30,6 +32,7 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
   // Function to remove a toast by its ID
   const removeToast = useCallback((id: string) => {
     setToasts(prev => prev.filter(toast => toast.id !== id));
+    console.log('PDebug remove toast by id: ', id);
   }, []);
 
   // Memoized context value to avoid unnecessary re-renders

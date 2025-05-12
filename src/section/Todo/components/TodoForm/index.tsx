@@ -1,8 +1,9 @@
 'use client';
 
 import { Dispatch, SetStateAction, useEffect } from 'react';
-import { TodoFormValues, TodoValue } from '@/section/Todo/types/ITodoList';
+import { TodoFormValues } from '@/section/Todo/types/ITodoList';
 import { useForm } from 'react-hook-form';
+import { TodoValue } from '@/section/Todo/components/TodoItem';
 
 export interface Props {
   onSubmitAction: (data: TodoValue) => void;
@@ -24,6 +25,10 @@ export const ToDoForm = ({
     reset,
     setValue,
   } = useForm<TodoFormValues>();
+
+  useEffect(() => {
+    console.log('PDebug TodoForm render');
+  });
 
   useEffect(() => {
     setValue('message', todoSelectedValue);

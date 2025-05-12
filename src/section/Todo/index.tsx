@@ -1,6 +1,6 @@
 import React from 'react';
-import { TodoValue } from '@/section/Todo/types/ITodoList';
 import { TodoList } from './components/TodoList';
+import { TodoValue } from '@/section/Todo/components/TodoItem';
 
 export default async function Todo() {
   const todoList: TodoValue[] = [
