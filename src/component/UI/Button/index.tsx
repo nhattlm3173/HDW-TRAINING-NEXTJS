@@ -18,7 +18,7 @@ export default function Button({ label, className = '', ...props }: ButtonProps)
   );
 
   return (
-    <button type="button" className={combinedClass} {...props}>
+    <button type="submit" className={combinedClass} {...props}>
       {label}
     </button>
   );
