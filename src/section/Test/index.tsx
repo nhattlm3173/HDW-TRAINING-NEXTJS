@@ -3,16 +3,18 @@
 import React, { useState } from 'react';
 import { useToast } from '@/component/Toast/hooks/useToast';
 import { ToastType } from '@/component/Toast/types/IToast';
-import Button from '@/component/UI/Button';
-import Checkbox from '@/component/UI/Checkbox';
-import Radio from '@/component/UI/Radio';
-import Dropdown from '@/component/UI/Dropdown';
+import Button from '@/component/ui/Button';
+import Checkbox from '@/component/ui/Checkbox';
+import Radio from '@/component/ui/Radio';
+import Dropdown from '@/component/ui/Dropdown';
+import TestForm from './components/TestForm';
 
 export default function Test() {
   const { showToast } = useToast();
   const [country, setCountry] = useState('vn');
   // const toasts = useContext(ToastContext);
   // console.log(toasts);
+
   return (
     <div className="space-y-3 space-x-3">
       <p>showcase</p>
@@ -62,6 +64,7 @@ export default function Test() {
           error={country === '' ? 'Bạn phải chọn quốc gia' : undefined}
         />
       </div>
+      <TestForm />
     </div>
   );
 }
