@@ -9,6 +9,8 @@ export default async function Todo() {
     { id: (Date.now() + 3).toString(), message: 'Implement Todo List', isFinish: true },
   ];
 
+  // Simulate fetching data from an API
+
   return (
     <div className="flex min-h-screen justify-center bg-gradient-to-br from-indigo-100 to-purple-100 p-6">
       <div className="w-full max-w-2xl">
