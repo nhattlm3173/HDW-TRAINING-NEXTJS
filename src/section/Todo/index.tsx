@@ -1,6 +1,6 @@
 import React from 'react';
-import { TodoValue } from '@/section/Todo/types/ITodoList';
 import { TodoList } from './components/TodoList';
+import { TodoValue } from '@/section/Todo/components/TodoItem';
 
 export default async function Todo() {
   const todoList: TodoValue[] = [
@@ -8,6 +8,8 @@ export default async function Todo() {
     { id: (Date.now() + 2).toString(), message: 'Learn NextJS', isFinish: false },
     { id: (Date.now() + 3).toString(), message: 'Implement Todo List', isFinish: true },
   ];
+
+  // Simulate fetching data from an API
 
   return (
     <div className="flex min-h-screen justify-center bg-gradient-to-br from-indigo-100 to-purple-100 p-6">

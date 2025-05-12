@@ -1,10 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { TodoValue } from '@/section/Todo/types/ITodoList';
 import { CloseOutlined, EditOutlined } from '@ant-design/icons';
 import { ConfirmModal } from '@/component/ConfirmModal';
 import { cn } from '@/utils/cn';
+
+export interface TodoValue {
+  id: string;
+  message: string;
+  isFinish: boolean;
+}
 
 export interface Props {
   todoItem: TodoValue;

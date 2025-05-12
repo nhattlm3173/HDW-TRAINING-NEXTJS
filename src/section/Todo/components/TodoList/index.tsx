@@ -1,10 +1,9 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import {  useMemo, useState } from 'react';
 import { useTodoOperations } from '../../hooks/useTodoOperations';
-import { TodoValue } from '@/section/Todo/types/ITodoList';
 import { ContainerOutlined } from '@ant-design/icons';
-import { TodoItem } from '../TodoItem';
+import { TodoItem, TodoValue } from '../TodoItem';
 import { ToDoForm } from '../TodoForm';
 
 interface Props {
@@ -58,10 +57,6 @@ export const TodoList = ({ todoList }: Props) => {
     }
   };
 
-  useEffect(() => {
-    console.log('PDebug TodoList render');
-  });
-
   const askUpdate = (todo: TodoValue) => {
     setTodoToUpdate(todo);
     setTodoSelectedValue(todo.message);
@@ -70,10 +65,10 @@ export const TodoList = ({ todoList }: Props) => {
   return (
     <div className="overflow-hidden rounded-xl bg-white shadow-xl">
       <ToDoForm
-        onSubmit={onSubmit}
+        onSubmitAction={onSubmit}
         todoSelectedValue={todoSelectedValue}
         todoToUpdate={todoToUpdate}
-        setTodoToUpdate={setTodoToUpdate}
+        setTodoToUpdateAction={setTodoToUpdate}
       />
 
       <div className="divide-y divide-gray-100">

@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { TodoValue } from '@/section/Todo/types/ITodoList';
 import { useToast } from '@/component/Toast/hooks/useToast';
 import { ToastType } from '@/component/Toast/types/IToast';
+import { TodoValue } from '@/section/Todo/components/TodoItem';
 
 export function useTodoOperations(initialTodos: TodoValue[] = []) {
   const [todoListData, setTodoListData] = useState<TodoValue[]>(initialTodos);
