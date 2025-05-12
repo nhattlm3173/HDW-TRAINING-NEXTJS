@@ -43,7 +43,15 @@ export default function TestForm() {
     >
       <Form.FormField
         name={'firstName'}
-        child={<Input label="firstName" placeholder="Enter your first Name" />}
+        child={
+          <Input
+            label="firstName"
+            placeholder="Enter your first Name"
+            onChange={e => {
+              return console.log(e.target.value);
+            }}
+          />
+        }
       />
 
       <Form.FormField

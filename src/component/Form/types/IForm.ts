@@ -10,5 +10,5 @@ export interface FormProps {
 
 export interface FormFieldProps {
   name: string;
-  child: React.ReactElement<{ error?: string }>;
+  child: React.ReactElement<{ error?: string; onChange?: (e: unknown) => void }>;
 }

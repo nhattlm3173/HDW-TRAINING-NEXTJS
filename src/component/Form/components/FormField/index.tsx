@@ -11,11 +11,17 @@ export default function FormField({ name, child }: FormFieldProps) {
       control={control}
       name={name}
       render={({ field, fieldState }) => {
+        const { onChange: rhfOnChange, ...restField } = field;
+
         // console.log(fieldState, field);
 
         return cloneElement(child, {
-          ...field,
+          ...restField,
           error: fieldState.error?.message,
+          onChange: (e: unknown) => {
+            rhfOnChange(e);
+            child.props.onChange?.(e);
+          },
         });
       }}
     />
