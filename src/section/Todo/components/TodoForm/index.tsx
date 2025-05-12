@@ -27,10 +27,6 @@ export const ToDoForm = ({
   } = useForm<TodoFormValues>();
 
   useEffect(() => {
-    console.log('PDebug TodoForm render');
-  });
-
-  useEffect(() => {
     setValue('message', todoSelectedValue);
   }, [todoSelectedValue, setValue]);
 

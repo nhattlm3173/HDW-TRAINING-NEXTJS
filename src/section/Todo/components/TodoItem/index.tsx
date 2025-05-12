@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { CloseOutlined, EditOutlined } from '@ant-design/icons';
 import { ConfirmModal } from '@/component/ConfirmModal';
 import { cn } from '@/utils/cn';
@@ -32,10 +32,6 @@ export const TodoItem = ({
 
     setConfirmVisible(true);
   };
-
-  useEffect(() => {
-    console.log('PDebug TodoItem render');
-  });
 
   const confirmDelete = () => {
     if (todoToDelete) {

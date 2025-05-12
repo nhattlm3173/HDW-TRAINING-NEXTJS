@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import {  useMemo, useState } from 'react';
 import { useTodoOperations } from '../../hooks/useTodoOperations';
 import { ContainerOutlined } from '@ant-design/icons';
 import { TodoItem, TodoValue } from '../TodoItem';
@@ -56,10 +56,6 @@ export const TodoList = ({ todoList }: Props) => {
       handleAddTodoItem(data);
     }
   };
-
-  useEffect(() => {
-    console.log('PDebug TodoList render');
-  });
 
   const askUpdate = (todo: TodoValue) => {
     setTodoToUpdate(todo);
